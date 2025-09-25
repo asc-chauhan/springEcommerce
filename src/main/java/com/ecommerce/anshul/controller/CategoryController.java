@@ -1,6 +1,7 @@
 package com.ecommerce.anshul.controller;
 
 import com.ecommerce.anshul.model.Category;
+import com.ecommerce.anshul.payload.CategoryResponse;
 import com.ecommerce.anshul.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,9 @@ public class CategoryController {
 
 //    @GetMapping("/public/categories")
     @RequestMapping(value = "/public/categories", method = RequestMethod.GET)
-    public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categories = categoryService.getAllCategories();
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+    public ResponseEntity<CategoryResponse> getAllCategories() {
+        CategoryResponse categoryResponse= categoryService.getAllCategories();
+        return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
 //    @PostMapping("/public/categories")
     @RequestMapping(value = "/public/categories", method = RequestMethod.POST)
