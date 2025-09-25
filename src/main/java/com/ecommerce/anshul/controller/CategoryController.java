@@ -1,6 +1,7 @@
 package com.ecommerce.anshul.controller;
 
 import com.ecommerce.anshul.model.Category;
+import com.ecommerce.anshul.payload.CategoryDTO;
 import com.ecommerce.anshul.payload.CategoryResponse;
 import com.ecommerce.anshul.service.CategoryService;
 import jakarta.validation.Valid;
@@ -27,11 +28,11 @@ public class CategoryController {
         CategoryResponse categoryResponse= categoryService.getAllCategories();
         return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
-//    @PostMapping("/public/categories")
-    @RequestMapping(value = "/public/categories", method = RequestMethod.POST)
-    public ResponseEntity<String> createCategory(@Valid @RequestBody Category category){
-        categoryService.createCategory(category);
-        return new ResponseEntity<>("Category created successfully", HttpStatus.CREATED);
+    @PostMapping("/public/categories")
+//    @RequestMapping(value = "/public/categories", method = RequestMethod.POST)
+    public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryDTO categoryDTO){
+        CategoryDTO savedCategoryDTO = categoryService.createCategory(categoryDTO);
+        return new ResponseEntity<>(savedCategoryDTO, HttpStatus.CREATED);
     }
     @DeleteMapping("/admin/categories/{categoryId}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {

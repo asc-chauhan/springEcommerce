@@ -1,13 +1,14 @@
 package com.ecommerce.anshul.service;
 
 import com.ecommerce.anshul.model.Category;
+import com.ecommerce.anshul.payload.CategoryDTO;
 import com.ecommerce.anshul.payload.CategoryResponse;
 
-import java.util.List;
 
 public interface CategoryService {
-   CategoryResponse getAllCategories();
-   void createCategory(Category category);
+    CategoryResponse getAllCategories();
+
+    CategoryDTO createCategory(CategoryDTO categoryDTO);
 
     String deleteCategory(Long categoryId);
 
