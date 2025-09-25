@@ -35,16 +35,16 @@ public class CategoryController {
         return new ResponseEntity<>(savedCategoryDTO, HttpStatus.CREATED);
     }
     @DeleteMapping("/admin/categories/{categoryId}")
-    public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
-        String status = categoryService.deleteCategory(categoryId);
-        return new ResponseEntity<>(status, HttpStatus.OK);
+    public ResponseEntity<CategoryDTO> deleteCategory(@PathVariable Long categoryId) {
+        CategoryDTO deletedCategoryDTO = categoryService.deleteCategory(categoryId);
+        return new ResponseEntity<>(deletedCategoryDTO, HttpStatus.OK);
         // return ResponseEntity.ok(status);
         // return ResponseEntity.status(HttpStatus.OK).body(status);
     }
     @PutMapping("/public/categories/{categoryId}")
-    public ResponseEntity<String> updateCategory(@RequestBody Category category, @PathVariable Long categoryId){
-        Category savedCategory = categoryService.updateCategory(category, categoryId);
-        return new ResponseEntity<>("Updated Category with categoryId: " + categoryId, HttpStatus.OK);
+    public ResponseEntity<CategoryDTO> updateCategory(@RequestBody CategoryDTO categoryDTO, @PathVariable Long categoryId){
+        CategoryDTO savedCategoryDTO = categoryService.updateCategory(categoryDTO, categoryId);
+        return new ResponseEntity<>(savedCategoryDTO, HttpStatus.OK);
     }
 
 }
