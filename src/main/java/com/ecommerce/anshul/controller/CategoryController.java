@@ -22,14 +22,21 @@ public class CategoryController {
 //        this.categoryService = categoryService;
 //    }
 
+//    @GetMapping("/echo")
+//    public ResponseEntity<String> echoMessage(@RequestParam(name = "message", defaultValue = "Hello, World! ") String message){
+//        return new ResponseEntity<>("Echoed Message: " + message, HttpStatus.OK);
+//    }
+
 //    @GetMapping("/public/categories")
     @RequestMapping(value = "/public/categories", method = RequestMethod.GET)
-    public ResponseEntity<CategoryResponse> getAllCategories() {
-        CategoryResponse categoryResponse= categoryService.getAllCategories();
+    public ResponseEntity<CategoryResponse> getAllCategories(
+            @RequestParam(name = "pageNumber") Integer pageNumber,
+            @RequestParam(name = "pageSize") Integer pageSize
+    ) {
+        CategoryResponse categoryResponse= categoryService.getAllCategories(pageNumber, pageSize);
         return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
     @PostMapping("/public/categories")
-//    @RequestMapping(value = "/public/categories", method = RequestMethod.POST)
     public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryDTO categoryDTO){
         CategoryDTO savedCategoryDTO = categoryService.createCategory(categoryDTO);
         return new ResponseEntity<>(savedCategoryDTO, HttpStatus.CREATED);
