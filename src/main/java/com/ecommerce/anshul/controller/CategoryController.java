@@ -1,7 +1,6 @@
 package com.ecommerce.anshul.controller;
 
 import com.ecommerce.anshul.config.AppConstants;
-import com.ecommerce.anshul.model.Category;
 import com.ecommerce.anshul.payload.CategoryDTO;
 import com.ecommerce.anshul.payload.CategoryResponse;
 import com.ecommerce.anshul.service.CategoryService;
@@ -10,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
