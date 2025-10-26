@@ -11,6 +11,7 @@ import com.ecommerce.anshul.security.request.SignupRequest;
 import com.ecommerce.anshul.security.response.MessageResponse;
 import com.ecommerce.anshul.security.response.UserInfoResponse;
 import com.ecommerce.anshul.security.services.UserDetailsImpl;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -46,6 +47,7 @@ public class AuthController {
     @Autowired
     RoleRepository roleRepository;
 
+    @Tag(name = "Authentication APIs", description = "APIs for managing auth.")
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         Authentication authentication;
@@ -76,6 +78,7 @@ public class AuthController {
                 .body(response);
     }
 
+    @Tag(name = "Authentication APIs", description = "APIs for managing auth.")
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if(userRepository.existsByUserName(signUpRequest.getUsername())){
@@ -124,6 +127,7 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("User registered Successfully!"));
     }
 
+    @Tag(name = "Authentication APIs", description = "APIs for managing auth.")
     @GetMapping("/username")
     public String currentUsername(Authentication authentication){
         if(authentication != null){
@@ -134,6 +138,7 @@ public class AuthController {
         }
     }
 
+    @Tag(name = "Authentication APIs", description = "APIs for managing auth.")
     @GetMapping("/user")
     public ResponseEntity<?> getUserDetails(Authentication authentication){
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -147,6 +152,7 @@ public class AuthController {
                 .body(response);
     }
 
+    @Tag(name = "Authentication APIs", description = "APIs for managing auth.")
     @PostMapping("/signout")
     public ResponseEntity<?> signOut(){
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();

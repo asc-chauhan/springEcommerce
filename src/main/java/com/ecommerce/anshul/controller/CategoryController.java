@@ -4,6 +4,7 @@ import com.ecommerce.anshul.config.AppConstants;
 import com.ecommerce.anshul.payload.CategoryDTO;
 import com.ecommerce.anshul.payload.CategoryResponse;
 import com.ecommerce.anshul.service.CategoryService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ public class CategoryController {
 //    }
 
 //    @GetMapping("/public/categories")
+    @Tag(name = "Category APIs", description = "APIs for managing categories.")
     @RequestMapping(value = "/public/categories", method = RequestMethod.GET)
     public ResponseEntity<CategoryResponse> getAllCategories(
             @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
@@ -36,11 +38,15 @@ public class CategoryController {
         CategoryResponse categoryResponse= categoryService.getAllCategories(pageNumber, pageSize, sortBy, sortOrder);
         return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
+
+    @Tag(name = "Category APIs", description = "APIs for managing categories.")
     @PostMapping("/public/categories")
     public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryDTO categoryDTO){
         CategoryDTO savedCategoryDTO = categoryService.createCategory(categoryDTO);
         return new ResponseEntity<>(savedCategoryDTO, HttpStatus.CREATED);
     }
+
+    @Tag(name = "Category APIs", description = "APIs for managing categories.")
     @DeleteMapping("/admin/categories/{categoryId}")
     public ResponseEntity<CategoryDTO> deleteCategory(@PathVariable Long categoryId) {
         CategoryDTO deletedCategoryDTO = categoryService.deleteCategory(categoryId);
@@ -48,6 +54,8 @@ public class CategoryController {
         // return ResponseEntity.ok(status);
         // return ResponseEntity.status(HttpStatus.OK).body(status);
     }
+
+    @Tag(name = "Category APIs", description = "APIs for managing categories.")
     @PutMapping("/public/categories/{categoryId}")
     public ResponseEntity<CategoryDTO> updateCategory(@RequestBody CategoryDTO categoryDTO, @PathVariable Long categoryId){
         CategoryDTO savedCategoryDTO = categoryService.updateCategory(categoryDTO, categoryId);
