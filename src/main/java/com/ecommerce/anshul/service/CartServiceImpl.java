@@ -6,6 +6,7 @@ import com.ecommerce.anshul.model.Cart;
 import com.ecommerce.anshul.model.CartItem;
 import com.ecommerce.anshul.model.Product;
 import com.ecommerce.anshul.payload.CartDTO;
+import com.ecommerce.anshul.payload.CartItemDTO;
 import com.ecommerce.anshul.payload.ProductDTO;
 import com.ecommerce.anshul.repositories.CartItemRepository;
 import com.ecommerce.anshul.repositories.CartRepository;
@@ -14,7 +15,6 @@ import com.ecommerce.anshul.util.AuthUtil;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class CartServiceImpl implements CartService{
     CartRepository cartRepository;
 
     @Autowired
-    private AuthUtil authUtil;
+    AuthUtil authUtil;
 
     @Autowired
     ProductRepository productRepository;
@@ -232,5 +232,54 @@ public class CartServiceImpl implements CartService{
         cart.setTotalPrice(0.00);
         cart.setUser(authUtil.loggedInUser());
         return cartRepository.save(cart);
+    }
+
+    @Transactional
+    @Override
+    public String createOrUpdateCartWithItems(List<CartItemDTO> cartItems) {
+        // Get user's email
+        String emailId = authUtil.loggedInEmail();
+
+        // Check if an existing cart is available or create a new one
+        Cart existingCart = cartRepository.findCartByEmail(emailId);
+        if (existingCart == null) {
+            existingCart = new Cart();
+            existingCart.setTotalPrice(0.00);
+            existingCart.setUser(authUtil.loggedInUser());
+            existingCart = cartRepository.save(existingCart);
+        } else {
+            // Clear all current items in the existing cart
+            cartItemRepository.deleteAllByCartId(existingCart.getCartId());
+        }
+
+        double totalPrice = 0.00;
+
+        // Process each item in the request to add to the cart
+        for (CartItemDTO cartItemDTO : cartItems) {
+            Long productId = cartItemDTO.getProductId();
+            Integer quantity = cartItemDTO.getQuantity();
+
+            // Find the product by ID
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+
+            // Directly update product stock and total price
+            // product.setQuantity(product.getQuantity() - quantity);
+            totalPrice += product.getSpecialPrice() * quantity;
+
+            // Create and save cart item
+            CartItem cartItem = new CartItem();
+            cartItem.setProduct(product);
+            cartItem.setCart(existingCart);
+            cartItem.setQuantity(quantity);
+            cartItem.setProductPrice(product.getSpecialPrice());
+            cartItem.setDiscount(product.getDiscount());
+            cartItemRepository.save(cartItem);
+        }
+
+        // Update the cart's total price and save
+        existingCart.setTotalPrice(totalPrice);
+        cartRepository.save(existingCart);
+        return "Cart created/updated with the new items successfully";
     }
 }

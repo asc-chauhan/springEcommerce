@@ -2,6 +2,7 @@ package com.ecommerce.anshul.controller;
 
 import com.ecommerce.anshul.model.Cart;
 import com.ecommerce.anshul.payload.CartDTO;
+import com.ecommerce.anshul.payload.CartItemDTO;
 import com.ecommerce.anshul.repositories.CartRepository;
 import com.ecommerce.anshul.service.CartService;
 import com.ecommerce.anshul.util.AuthUtil;
@@ -65,5 +66,11 @@ public class CartController {
                                                         @PathVariable Long productId){
         String status = cartService.deleteProductFromCart(cartId, productId);
         return new ResponseEntity<String>(status, HttpStatus.OK);
+    }
+
+    @PostMapping("/cart/create")
+    public ResponseEntity<String> createOrUpdateCart(@RequestBody List<CartItemDTO> cartItems){
+        String response = cartService.createOrUpdateCartWithItems(cartItems);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }
