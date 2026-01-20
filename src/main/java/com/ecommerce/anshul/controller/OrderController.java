@@ -2,8 +2,12 @@ package com.ecommerce.anshul.controller;
 
 import com.ecommerce.anshul.payload.OrderDTO;
 import com.ecommerce.anshul.payload.OrderRequestDTO;
+import com.ecommerce.anshul.payload.StripePaymentDTO;
 import com.ecommerce.anshul.service.OrderService;
+import com.ecommerce.anshul.service.StripeService;
 import com.ecommerce.anshul.util.AuthUtil;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +22,9 @@ public class OrderController {
 
     @Autowired
     private AuthUtil authUtil;
+
+    @Autowired
+    private StripeService stripeService;
 
     @Tag(name = "Order API", description = "API for managing orders.")
     @PostMapping("/order/users/payments/{paymentMethod}")
@@ -35,5 +42,11 @@ public class OrderController {
                 orderRequestDTO.getPgResponseMessage()
         );
         return new ResponseEntity<>(order, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/order/stripe-client-secret")
+    public ResponseEntity<String> createStripeClientSecret(@RequestBody StripePaymentDTO stripePaymentDTO) throws StripeException {
+        PaymentIntent paymentIntent = stripeService.paymentIntent(stripePaymentDTO);
+        return new ResponseEntity<>(paymentIntent.getClientSecret(), HttpStatus.CREATED);
     }
 }
