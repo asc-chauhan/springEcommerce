@@ -117,6 +117,9 @@ public class ProductServiceImpl implements ProductService{
     }
 
     private String constructImageUrl(String imageName){
+        if (imageName != null && imageName.startsWith("http")) {
+            return imageName;
+        }
         return imageBaseUrl.endsWith("/") ? imageBaseUrl + imageName
                 : imageBaseUrl + "/" + imageName;
     }

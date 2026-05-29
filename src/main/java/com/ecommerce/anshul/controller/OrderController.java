@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class OrderController {
@@ -25,6 +27,21 @@ public class OrderController {
 
     @Autowired
     private StripeService stripeService;
+
+    @Tag(name = "Order API", description = "API for managing orders.")
+    @GetMapping("/admin/orders")
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        List<OrderDTO> orders = orderService.getAllOrders();
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
+
+    @Tag(name = "Order API", description = "API for managing orders.")
+    @GetMapping("/order/users/my-orders")
+    public ResponseEntity<List<OrderDTO>> getMyOrders() {
+        String emailId = authUtil.loggedInEmail();
+        List<OrderDTO> orders = orderService.getOrdersByEmail(emailId);
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
 
     @Tag(name = "Order API", description = "API for managing orders.")
     @PostMapping("/order/users/payments/{paymentMethod}")

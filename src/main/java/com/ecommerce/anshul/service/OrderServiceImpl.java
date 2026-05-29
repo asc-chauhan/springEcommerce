@@ -110,4 +110,28 @@ public class OrderServiceImpl implements OrderService{
 
         return orderDTO;
     }
+
+    @Override
+    public List<OrderDTO> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        return orders.stream().map(order -> {
+            OrderDTO orderDTO = modelMapper.map(order, OrderDTO.class);
+            if (order.getAddress() != null) {
+                orderDTO.setAddressId(order.getAddress().getAddressId());
+            }
+            return orderDTO;
+        }).toList();
+    }
+
+    @Override
+    public List<OrderDTO> getOrdersByEmail(String email) {
+        List<Order> orders = orderRepository.findByEmail(email);
+        return orders.stream().map(order -> {
+            OrderDTO orderDTO = modelMapper.map(order, OrderDTO.class);
+            if (order.getAddress() != null) {
+                orderDTO.setAddressId(order.getAddress().getAddressId());
+            }
+            return orderDTO;
+        }).toList();
+    }
 }
